@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "discord-chat-filter"
+version = "0.1.0"
+description = ""
+authors = ["ntarsillo"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+discord = "^2.3.2"
+transformers = "^4.45.0"
+torch = "^2.4.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
