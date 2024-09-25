@@ -1,4 +1,4 @@
-FROM python as builder
+FROM pytorch/pytorch:latest as builder
 
 RUN pip install poetry
 
