@@ -1,13 +1,26 @@
-FROM debian:12-slim AS builder
-RUN apt-get update && \
-    apt-get install --no-install-suggests --no-install-recommends --yes pipx
-ENV PATH="/root/.local/bin:${PATH}"
-RUN pipx install poetry
-RUN pipx inject poetry poetry-plugin-bundle
-WORKDIR /src
-COPY . .
-RUN poetry bundle venv --python=/usr/bin/python3 --only=main /venv
+FROM python:3.11-buster as builder
 
-FROM gcr.io/distroless/python3-debian12
-COPY --from=builder /venv /venv
-ENTRYPOINT ["/venv/bin/main"]
+RUN pip install poetry==1.4.2
+
+ENV POETRY_NO_INTERACTION=1 \
+    POETRY_VIRTUALENVS_IN_PROJECT=1 \
+    POETRY_VIRTUALENVS_CREATE=1 \
+    POETRY_CACHE_DIR=/tmp/poetry_cache
+
+WORKDIR /app
+
+COPY pyproject.toml poetry.lock ./
+RUN touch README.md
+
+RUN --mount=type=cache,target=$POETRY_CACHE_DIR poetry install --without dev --no-root
+
+FROM python:3.11-slim-buster as runtime
+
+ENV VIRTUAL_ENV=/app/.venv \
+    PATH="/app/.venv/bin:$PATH"
+
+COPY --from=builder ${VIRTUAL_ENV} ${VIRTUAL_ENV}
+
+COPY annapurna ./annapurna
+
+ENTRYPOINT ["python", "-m", "main"]
