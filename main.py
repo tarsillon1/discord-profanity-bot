@@ -10,6 +10,8 @@ TOKEN = os.getenv('DISCORD_TOKEN')
 
 client = discord.Client(intents=discord.Intents.default())
 
+print("user: " + client.user)
+
 
 @client.event
 async def on_message(message):
