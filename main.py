@@ -13,6 +13,8 @@ client = discord.Client(intents=discord.Intents.default())
 
 @client.event
 async def on_message(message):
+    print(message.author + ": " + message.content)
+
     if message.author == client.user:
         return
 
