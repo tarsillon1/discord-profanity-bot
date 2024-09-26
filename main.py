@@ -10,16 +10,10 @@ TOKEN = os.getenv('DISCORD_TOKEN')
 
 client = discord.Client(intents=discord.Intents.default())
 
-print("user: " + client.user)
-
 
 @client.event
 async def on_message(message):
     print(message.author + ": " + message.content)
-
-    if message.author == client.user:
-        return
-
     should_filter = pipe.predict(message.content)[
         0]['label'] == '1'
     if should_filter:
