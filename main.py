@@ -8,7 +8,7 @@ pipe = pipeline("text-classification", model="parsawar/profanity_model_3.1")
 
 TOKEN = os.getenv('DISCORD_TOKEN')
 
-client = discord.Client(intents=discord.Intents.default())
+client = discord.Client(intents=discord.Intents.all())
 
 
 @client.event
