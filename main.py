@@ -12,8 +12,8 @@ client = discord.Client(intents=discord.Intents.all())
 
 
 @client.event
-async def on_message(message):
-    print(message.author + ": " + message.content)
+async def on_message(message: discord.Message):
+    print(message.author.name + ": " + message.content)
     should_filter = pipe.predict(message.content)[
         0]['label'] == '1'
     if should_filter:
