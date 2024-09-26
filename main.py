@@ -17,6 +17,6 @@ async def on_message(message: discord.Message):
     should_filter = pipe.predict(message.content)[
         0]['label'] == '1'
     if should_filter:
-        message.delete()
+        await message.delete()
 
 client.run(TOKEN)
