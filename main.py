@@ -4,7 +4,7 @@ import discord
 
 from profanity import predict_profanity
 
-from model import explain, respond
+from model import explain, respond, is_talking_to_bot
 
 from dotenv import load_dotenv
 
@@ -38,6 +38,7 @@ async def on_message(message: discord.Message):
 
         explanation = explain(content)
         await message.channel.send(mention +" " + explanation)
+        return
 
     has_attachment = len(message.attachments) > 0
     if has_attachment and SHOULD_DELETE:
@@ -45,8 +46,9 @@ async def on_message(message: discord.Message):
 
         await message.delete()
         await message.channel.send(mention + " no attachments. Learn to code idiot.")
+        return
     
-    is_mentioned = client.user.mentioned_in(message)
+    is_mentioned = client.user.mentioned_in(message) | is_talking_to_bot(content)
     if is_mentioned:
         response = respond(author, content)
         await message.channel.send(response)
