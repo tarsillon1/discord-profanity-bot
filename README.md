@@ -8,11 +8,8 @@
    poetry install
    ```
 
-2. Install xformers (linux win)
+2. Create .env file.
    ```bash
-    pip install -U xformers --index-url https://download.pytorch.org/whl/cu124
+   cp .env.sample .env
    ```
-3. Install torch cuda (linux win)
-   ```bash
-    pip install torch==2.4.1 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu124
-   ```
+3. Configure discord API token in .env.
