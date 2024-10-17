@@ -10,6 +10,9 @@ python = "^3.10"
 discord = "^2.3.2"
 transformers = "^4.45.0"
 torch = "^2.4.1"
+huggingface-hub = "^0.25.2"
+protobuf = "^5.28.2"
+sentencepiece = "^0.2.0"
 
 
 [build-system]

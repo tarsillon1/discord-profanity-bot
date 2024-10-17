@@ -2,16 +2,9 @@ import os
 
 import discord
 
+from profanity import predict_profanity
 
-from transformers import pipeline
-
-
-pipe = pipeline("text-classification", model="parsawar/profanity_model_3.1")
-
-
-def predict(content: str):
-    return pipe.predict(content)[
-        0]['label'] == '1'
+from explain import explain
 
 
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -26,8 +19,8 @@ async def on_message(message: discord.Message):
     if message.author.name not in USERS:
         return
 
-    should_filter = pipe.predict(message.content)[
-        0]['label'] == '1'
+    content = message.content
+    should_filter = predict_profanity(content)
 
     result = "OK"
 
@@ -35,6 +28,10 @@ async def on_message(message: discord.Message):
         result = "DELETE"
         await message.delete()
 
-    print(result + ": " + message.author.name + ": " + message.content)
+        explanation = explain(content)
+        message.channel.send(explanation)
+
+    print(result + ": " + message.author.name + ": " + content)
+
 
 client.run(TOKEN)
