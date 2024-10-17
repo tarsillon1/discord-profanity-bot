@@ -55,6 +55,9 @@ async def moderate(message: discord.Message):
 
 @client.event
 async def on_message(message: discord.Message):
+    if message.author.id == client.user.id:
+        return
+
     moderated = await moderate(message)
     if moderated:
         return

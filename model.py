@@ -3,12 +3,17 @@ import os
 import torch
 from transformers import pipeline
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
 model_id = "meta-llama/Llama-3.2-3B-Instruct"
 pipe = pipeline(
     "text-generation",
     model=model_id,
     torch_dtype=torch.bfloat16,
     device_map="auto",
+    temperature=0.2,
 )
 
 def output(messages, max_new_tokens=256):
@@ -41,8 +46,9 @@ def respond(author: str, sentence: str):
         messages.pop(0)
 
     messages.append({ "role": "user", "content": author + ": " + sentence })
-    all = [system] + messages
-    print(all)
+
+    all = [system] + messages + [system]
+
     response = clean(output(all))
     messages.append({ "role": "assistant", "content": response })
     return response
