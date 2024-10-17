@@ -4,7 +4,7 @@ import discord
 
 from profanity import predict_profanity
 
-from explain import explain
+from model import explain, respond
 
 from dotenv import load_dotenv
 
@@ -45,8 +45,13 @@ async def on_message(message: discord.Message):
 
         await message.delete()
         await message.channel.send(mention + " no attachments. Learn to code idiot.")
+    
+    is_mentioned = client.user.mentioned_in(message)
+    if is_mentioned:
+        response = respond(author, content)
+        await message.channel.send(response)
 
-    print(result + ": " + message.author.name + ": " + content)
+    print(result + ": " + author + ": " + content)
 
 
 client.run(TOKEN)
