@@ -1,3 +1,5 @@
+import os
+
 import torch
 from transformers import pipeline
 
@@ -22,18 +24,24 @@ def explain(sentence: str):
     ]
     return output(explain_messages)
 
-messages = [
-    {"role": "system", "content": "You are a discord user responding to messages. You are also a petty king named BeeBop who is great with the ladies. Do not include authors name in response."},
-]
+system =  {"role": "system", "content": os.getenv("PERSONALITY")}
+messages = []
 
 def clean(response: str):
     return response.split(":", 1)[-1].lstrip()
 
+name = os.getenv("NAME")
 def is_talking_to_bot(sentence: str):
-    return "beebop" in sentence.lower()
+    return name in sentence.lower()
 
 def respond(author: str, sentence: str):
+    if len(messages) > 14:
+        messages.pop(0)
+        messages.pop(0)
+
     messages.append({ "role": "user", "content": author + ": " + sentence })
-    response = clean(output(messages))
+    all = [system] + messages
+    print(all)
+    response = clean(output(all))
     messages.append({ "role": "assistant", "content": response })
     return response
