@@ -1,17 +1,20 @@
-import os
-
-from huggingface_hub import login
+import torch
 from transformers import pipeline
 
-login(token=os.getenv('HUGGING_FACE_TOKEN'))
-
-explainer = pipeline(
-    "text-generation", model="mistralai/Mistral-7B-Instruct-v0.3")
-
+model_id = "meta-llama/Llama-3.2-3B-Instruct"
+pipe = pipeline(
+    "text-generation",
+    model=model_id,
+    torch_dtype=torch.bfloat16,
+    device_map="auto",
+)
 
 def explain(sentence: str):
     messages = [
-        {"role": "system", "content": "You are a chat moderator that explains why a provided sentence is bad. Do not include the original sentence in your response."},
-        {"role": "user", "content": sentence},
+        {"role": "user", "content": "Why is this inappropriate? Keep it short: \n\n" + sentence},
     ]
-    return explainer(messages)
+    outputs =  pipe(
+        messages,
+        max_new_tokens=256,
+    )
+    return outputs[0]["generated_text"][-1]['content']

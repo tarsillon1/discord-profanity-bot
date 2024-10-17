@@ -6,6 +6,9 @@ from profanity import predict_profanity
 
 from explain import explain
 
+from dotenv import load_dotenv
+
+load_dotenv()
 
 TOKEN = os.getenv('DISCORD_TOKEN')
 
@@ -16,20 +19,27 @@ client = discord.Client(intents=discord.Intents.all())
 
 @client.event
 async def on_message(message: discord.Message):
-    if message.author.name not in USERS:
+    author =  message.author.name
+    if author not in USERS:
         return
 
     content = message.content
     should_filter = predict_profanity(content)
 
     result = "OK"
+    mention = '<@'+ str(message.author.id) +'>'
 
     if should_filter:
         result = "DELETE"
         await message.delete()
 
         explanation = explain(content)
-        message.channel.send(explanation)
+        await message.channel.send(mention +" " + explanation)
+
+    has_attachment = len(message.attachments) > 0
+    if has_attachment:
+        await message.delete()
+        await message.channel.send(mention + " no attachments. Learn to code idiot.")
 
     print(result + ": " + message.author.name + ": " + content)
 

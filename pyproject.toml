@@ -4,16 +4,22 @@ version = "0.1.0"
 description = ""
 authors = ["ntarsillo"]
 readme = "README.md"
+package-mode = false
 
 [tool.poetry.dependencies]
 python = "^3.10"
 discord = "^2.3.2"
 transformers = "^4.45.0"
-torch = "^2.4.1"
 huggingface-hub = "^0.25.2"
-protobuf = "^5.28.2"
-sentencepiece = "^0.2.0"
+python-dotenv = "^1.0.1"
+torch = { "source" = "pytorch-gpu-src", "version" = "2.4.1" }
+accelerate = ">=0.26.0"
 
+
+[[tool.poetry.source]]
+name = "pytorch-gpu-src"
+url = "https://download.pytorch.org/whl/cu124"
+priority = "explicit"
 
 [build-system]
 requires = ["poetry-core"]
