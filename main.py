@@ -38,6 +38,8 @@ async def on_message(message: discord.Message):
 
     has_attachment = len(message.attachments) > 0
     if has_attachment:
+        result = "DELETE"
+
         await message.delete()
         await message.channel.send(mention + " no attachments. Learn to code idiot.")
 
