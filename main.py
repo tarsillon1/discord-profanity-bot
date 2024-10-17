@@ -14,6 +14,8 @@ TOKEN = os.getenv('DISCORD_TOKEN')
 
 USERS = set(os.getenv("USERS").split(","))
 
+SHOULD_DELETE = os.getenv("SHOULD_DELETE") == "true"
+
 client = discord.Client(intents=discord.Intents.all())
 
 
@@ -31,13 +33,14 @@ async def on_message(message: discord.Message):
 
     if should_filter:
         result = "DELETE"
-        await message.delete()
+        if SHOULD_DELETE:
+            await message.delete()
 
         explanation = explain(content)
         await message.channel.send(mention +" " + explanation)
 
     has_attachment = len(message.attachments) > 0
-    if has_attachment:
+    if has_attachment and SHOULD_DELETE:
         result = "DELETE"
 
         await message.delete()
