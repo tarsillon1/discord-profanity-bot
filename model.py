@@ -34,8 +34,9 @@ name = os.getenv("NAME")
 def is_talking_to_bot(sentence: str):
     return name in sentence.lower()
 
+chat_window = int(os.getenv("CHAT_WINDOW"))
 def respond(author: str, sentence: str):
-    if len(messages) > 14:
+    if len(messages) > chat_window:
         messages.pop(0)
         messages.pop(0)
 
